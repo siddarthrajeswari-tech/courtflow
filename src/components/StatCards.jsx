@@ -37,7 +37,17 @@ export default function StatCards() {
                 {card.suffix && <span className="stat-suffix"> {card.suffix}</span>}
               </span>
               {card.delta && (
-                <span className={`stat-delta ${card.trend === 'up' ? 'up' : 'down'}`}>
+                <span
+                  className={`stat-delta ${
+                    card.sentiment === 'negative'
+                      ? 'red'
+                      : card.sentiment === 'positive'
+                      ? 'green'
+                      : card.trend === 'up'
+                      ? 'green'
+                      : 'red'
+                  }`}
+                >
                   {card.trend === 'up' ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
                   {card.delta} vs Apr 2025
                 </span>

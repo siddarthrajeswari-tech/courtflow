@@ -1,11 +1,11 @@
 // Top-level KPI stat cards (values are mock data — wire these to your API)
 export const statCards = [
-  { label: 'Total Cases', value: '4,01,23,567', delta: '6.21%', trend: 'up', icon: 'folder' },
-  { label: 'Pending Cases', value: '3,18,45,884', delta: '7.38%', trend: 'down', icon: 'hourglass' },
-  { label: 'Disposed Cases', value: '82,77,683', delta: '8.52%', trend: 'up', icon: 'check' },
-  { label: 'New Cases (This Month)', value: '13,45,256', delta: '2.31%', trend: 'up', icon: 'filePlus' },
+  { label: 'Total Cases', value: '4,01,23,567', delta: '6.21%', trend: 'up', sentiment: 'negative', icon: 'folder' },
+  { label: 'Pending Cases', value: '3,18,45,884', delta: '7.38%', trend: 'down', sentiment: 'positive', icon: 'hourglass' },
+  { label: 'Disposed Cases', value: '82,77,683', delta: '8.52%', trend: 'up', sentiment: 'positive', icon: 'check' },
+  { label: 'New Cases (This Month)', value: '13,45,256', delta: '2.31%', trend: 'up', sentiment: 'negative', icon: 'filePlus' },
   { label: 'Average Disposal Time', value: '243', suffix: 'Days', icon: 'clock' },
-  { label: 'Cases Beyond Expected Time', value: '1,12,987', delta: '23.47%', trend: 'down', icon: 'alert' },
+  { label: 'Cases Beyond Expected Time', value: '1,12,987', delta: '23.47%', trend: 'down', sentiment: 'positive', icon: 'alert' },
 ]
 
 // Core service tiles

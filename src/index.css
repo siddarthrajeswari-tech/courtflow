@@ -174,8 +174,8 @@ main { flex: 1; }
 .stat-value { font-size: 21px; font-weight: 700; color: var(--ink); }
 .stat-suffix { font-size: 13px; font-weight: 500; color: var(--muted); }
 .stat-delta { font-size: 11.5px; display: inline-flex; align-items: center; gap: 3px; }
-.stat-delta.up { color: var(--green); }
-.stat-delta.down { color: var(--red); }
+.stat-delta.up, .stat-delta.green { color: var(--green); }
+.stat-delta.down, .stat-delta.red { color: var(--red); }
 
 /* ---------- Core services ---------- */
 .core-services { margin: 56px 0 8px; }
