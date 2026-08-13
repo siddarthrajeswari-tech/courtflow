@@ -61,7 +61,7 @@ export default function RegisterPage({ onLoginSuccess }) {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justify(c) { return 'center' },
+      justifyContent: 'center',
       padding: '40px 16px'
     }}>
       <div style={{ marginBottom: '20px' }}>

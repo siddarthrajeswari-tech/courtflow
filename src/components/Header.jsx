@@ -1,7 +1,16 @@
+import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Landmark, Scale, Ear, SunMedium, Moon, ChevronDown, LogIn, LogOut } from 'lucide-react'
 
 export default function Header({ user, onOpenLogin, onLogout }) {
+  const [darkMode, setDarkMode] = useState(false)
+  const [lang, setLang] = useState('English')
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+    document.body.classList.toggle('dark-mode')
+  }
+
   return (
     <header className="site-header">
       <div className="topbar">
@@ -10,11 +19,25 @@ export default function Header({ user, onOpenLogin, onLogout }) {
           <span><Scale size={14} /> Ministry of Law &amp; Justice</span>
         </div>
         <div className="topbar-right">
-          <span><Ear size={14} /> Screen Reader</span>
-          <span>Skip to Main Content</span>
-          <span className="lang">English <ChevronDown size={12} /></span>
-          <span><SunMedium size={14} /></span>
-          <span><Moon size={14} /></span>
+          <span style={{ cursor: 'pointer' }} onClick={() => alert('Screen Reader Mode activated.')}>
+            <Ear size={14} /> Screen Reader
+          </span>
+          <a href="#main-content" style={{ color: 'inherit', textDecoration: 'none' }}>Skip to Main Content</a>
+          <span
+            className="lang"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setLang(lang === 'English' ? 'Hindi' : 'English')}
+            title="Toggle Language"
+          >
+            {lang} <ChevronDown size={12} />
+          </span>
+          <span
+            style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}
+            onClick={toggleDarkMode}
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {darkMode ? <SunMedium size={14} /> : <Moon size={14} />}
+          </span>
         </div>
       </div>
 
@@ -22,7 +45,7 @@ export default function Header({ user, onOpenLogin, onLogout }) {
         <Link to="/" className="brand">
           <img src="/emblem.svg" alt="" className="emblem" />
           <div className="brand-text">
-            <strong>eCourts Services</strong>
+            <strong>LawNexus Services</strong>
             <span>District and Taluka Courts of India</span>
           </div>
         </Link>

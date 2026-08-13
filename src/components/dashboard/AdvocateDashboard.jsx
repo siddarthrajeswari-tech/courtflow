@@ -14,21 +14,28 @@ import {
   Zap,
   Info,
   User,
-  ArrowRight
+  ArrowRight,
+  Plus
 } from 'lucide-react'
 import './AdvocateDashboard.css'
+import CaseRegistrationModal from './CaseRegistrationModal.jsx'
 
 export default function AdvocateDashboard({ user, onLogout }) {
   const [dateFilter, setDateFilter] = useState('12 May 2025')
   const [caseFilter, setCaseFilter] = useState('All Cases')
+  const [isRegModalOpen, setIsRegModalOpen] = useState(false)
 
-  const myCases = [
+  const [casesList, setCasesList] = useState([
     { caseNo: 'C/2024/1234', title: 'State vs. Rajesh Kumar', nextHearing: '15 May 2025', status: 'Pending', statusClass: 'status-pending', priority: 'High', priorityClass: 'p-high' },
     { caseNo: 'C/2023/5678', title: 'ABC Pvt Ltd vs. DEF Corp', nextHearing: '20 May 2025', status: 'Notice Issued', statusClass: 'status-notice', priority: 'Medium', priorityClass: 'p-med' },
     { caseNo: 'C/2024/9101', title: 'Suresh vs. Suresh', nextHearing: '22 May 2025', status: 'Evidence', statusClass: 'status-evidence', priority: 'Medium', priorityClass: 'p-med' },
     { caseNo: 'C/2023/1121', title: 'Mohit Verma vs. State', nextHearing: '28 May 2025', status: 'Pending', statusClass: 'status-pending', priority: 'Low', priorityClass: 'p-low' },
     { caseNo: 'C/2023/1314', title: 'XYZ Bank vs. PQR Ltd', nextHearing: '02 Jun 2025', status: 'Arguments', statusClass: 'status-arguments', priority: 'Low', priorityClass: 'p-low' },
-  ]
+  ])
+
+  const handleAddNewCase = (newCase) => {
+    setCasesList([newCase, ...casesList])
+  }
 
   const upcomingHearings = [
     { day: 'WED', date: '15', month: 'MAY', title: 'State vs. Rajesh Kumar', caseNo: 'C/2024/1234', time: '10:30 AM', court: 'Court No. 5' },
@@ -55,6 +62,28 @@ export default function AdvocateDashboard({ user, onLogout }) {
         </div>
 
         <div className="advocate-top-right">
+          <button
+            type="button"
+            className="primary-btn"
+            style={{
+              padding: '8px 16px',
+              fontSize: '13px',
+              fontWeight: 700,
+              background: '#2563eb',
+              color: '#ffffff',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+            onClick={() => setIsRegModalOpen(true)}
+          >
+            <Plus size={16} /> Register New Case
+          </button>
+
           <div className="advocate-date-btn">
             <Calendar size={15} />
             <span>{dateFilter}</span>
@@ -77,8 +106,8 @@ export default function AdvocateDashboard({ user, onLogout }) {
           </div>
           <div className="adv-kpi-info">
             <span className="adv-kpi-title">Total Cases</span>
-            <span className="adv-kpi-number">24</span>
-            <span className="adv-kpi-sub">All Cases</span>
+            <span className="adv-kpi-number">{casesList.length}</span>
+            <span className="adv-kpi-sub">All Active Cases</span>
           </div>
           <a href="#" className="adv-kpi-link" onClick={(e) => e.preventDefault()}>View All &rarr;</a>
         </div>
@@ -164,20 +193,16 @@ export default function AdvocateDashboard({ user, onLogout }) {
                   <th>Case Title</th>
                   <th>Next Hearing</th>
                   <th>Status</th>
-                  <th>Priority</th>
                 </tr>
               </thead>
               <tbody>
-                {myCases.map((c, i) => (
+                {casesList.map((c, i) => (
                   <tr key={i}>
                     <td className="case-no-cell">{c.caseNo}</td>
                     <td className="title-cell">{c.title}</td>
                     <td className="date-cell">{c.nextHearing}</td>
                     <td>
-                      <span className={`status-pill ${c.statusClass}`}>{c.status}</span>
-                    </td>
-                    <td>
-                      <span className={`p-badge ${c.priorityClass}`}>{c.priority}</span>
+                      <span className={`status-pill ${c.statusClass || 'status-pending'}`}>{c.status}</span>
                     </td>
                   </tr>
                 ))}
@@ -254,7 +279,7 @@ export default function AdvocateDashboard({ user, onLogout }) {
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#38bdf8" strokeWidth="16" strokeDasharray="10 229" strokeDashoffset="-228" />
               </svg>
               <div className="donut-center-val">
-                <strong>24</strong>
+                <strong>{casesList.length}</strong>
                 <span>Total</span>
               </div>
             </div>
@@ -324,6 +349,11 @@ export default function AdvocateDashboard({ user, onLogout }) {
           </div>
 
           <div className="adv-actions-grid">
+            <div className="adv-action-box blue-box" onClick={() => setIsRegModalOpen(true)} style={{ cursor: 'pointer' }}>
+              <PlusCircle size={20} className="act-icon" />
+              <span>Register New Case</span>
+            </div>
+
             <div className="adv-action-box purple-box">
               <FileText size={20} className="act-icon" />
               <span>View My Documents</span>
@@ -338,11 +368,6 @@ export default function AdvocateDashboard({ user, onLogout }) {
               <Download size={20} className="act-icon" />
               <span>Download Orders</span>
             </div>
-
-            <div className="adv-action-box blue-box">
-              <PlusCircle size={20} className="act-icon" />
-              <span>Raise Request</span>
-            </div>
           </div>
         </div>
       </div>
@@ -352,6 +377,13 @@ export default function AdvocateDashboard({ user, onLogout }) {
         <Info size={16} className="help-icon" />
         <span>Need help? Contact support or raise a request through Help &amp; Support.</span>
       </div>
+
+      {/* Case Registration Wizard Modal */}
+      <CaseRegistrationModal
+        isOpen={isRegModalOpen}
+        onClose={() => setIsRegModalOpen(false)}
+        onSaveCase={handleAddNewCase}
+      />
     </div>
   )
 }

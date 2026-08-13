@@ -4,7 +4,7 @@ import {
 } from 'lucide-react'
 
 const links = [
-  { label: 'eCourts Mission Mode Project', icon: LayoutGrid },
+  { label: 'LawNexus Mission Mode Project', icon: LayoutGrid },
   { label: 'National Judicial Data Grid (NJDG)', icon: ClipboardList },
   { label: 'Virtual Justice Clock', icon: Clock3 },
   { label: 'Supreme Court of India', icon: Landmark },

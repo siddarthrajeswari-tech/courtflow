@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import DashboardSidebar from '../components/dashboard/DashboardSidebar.jsx'
 import DashboardHeader from '../components/dashboard/DashboardHeader.jsx'
 import AdminOverview from '../components/dashboard/AdminOverview.jsx'
@@ -9,10 +10,20 @@ import '../components/dashboard/dashboard.css'
 import { ShieldCheck } from 'lucide-react'
 
 export default function Dashboard({ user, onOpenLogin, onLogout }) {
+  const location = useLocation()
   const [activeTab, setActiveTab] = useState('overview')
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCase, setSelectedCase] = useState(null)
+  const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery || '')
+  const [selectedCase, setSelectedCase] = useState(location.state?.selectedCase || null)
+
+  useEffect(() => {
+    if (location.state?.selectedCase) {
+      setSelectedCase(location.state.selectedCase)
+    }
+    if (location.state?.searchQuery) {
+      setSearchQuery(location.state.searchQuery)
+    }
+  }, [location.state])
 
   const isAdvocate = Boolean(
     (user && (

@@ -9,14 +9,14 @@ export default function Footer() {
       <div className="footer-grid">
         <div className="footer-col">
           <p className="footer-owner">
-            This website belongs to <strong>eCourts Services Division</strong>
+            This website belongs to <strong>LawNexus Services Division</strong>
             <br />Ministry of Law &amp; Justice, Government of India
           </p>
         </div>
 
         <div className="footer-col">
           <h5>Useful Links</h5>
-          <a href="#">About eCourts</a>
+          <a href="#">About LawNexus</a>
           <a href="#">Contact Us</a>
           <a href="#">Terms &amp; Conditions</a>
         </div>
@@ -31,7 +31,7 @@ export default function Footer() {
         <div className="footer-col">
           <h5>Contact Us</h5>
           <p><Phone size={14} /> 011-23387210</p>
-          <p><Mail size={14} /> support-ecourts@nic.in</p>
+          <p><Mail size={14} /> support-lawnexus@nic.in</p>
           <p><MapPin size={14} /> 13th Floor, Jeevan Tara Building, Parliament Street, New Delhi - 110001</p>
         </div>
 

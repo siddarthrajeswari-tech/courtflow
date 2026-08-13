@@ -215,6 +215,64 @@ main { flex: 1; }
   font-weight: 400;
 }
 
+.stack-action-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+.stack-action-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+.stack-action-btn.clear:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.stack-history-container {
+  padding-bottom: 4px;
+}
+
+.stack-items-list {
+  padding: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.stack-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.stack-history-item:hover {
+  background: #f1f5f9;
+}
+.stack-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 .hero-dropdown-list {
   max-height: 280px;
   overflow-y: auto;

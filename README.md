@@ -1,6 +1,6 @@
-# eCourts Pendency Dashboard (React)
+# LawNexus Pendency Dashboard (React)
 
-React + Vite recreation of the eCourts "Legal Pendency Reduction & Court Flow
+React + Vite recreation of the LawNexus "Legal Pendency Reduction & Court Flow
 Management" homepage, with:
 
 - The "Digital India" footer block removed

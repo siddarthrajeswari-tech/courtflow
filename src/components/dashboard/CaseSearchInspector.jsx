@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { Search, AlertTriangle, Clock, Calendar, FileText, CheckCircle2, Sparkles, X, ChevronRight } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Search, AlertTriangle, Clock, Calendar, FileText, CheckCircle2, Sparkles, X, ChevronRight, History } from 'lucide-react'
+import Stack from '../ui/Stack.jsx'
 
 export const sampleCasesData = [
   {
@@ -62,6 +63,13 @@ export const sampleCasesData = [
 
 export default function CaseSearchInspector({ searchQuery, setSearchQuery, selectedCase, setSelectedCase }) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
+  const [historyStack, setHistoryStack] = useState(() => [
+    sampleCasesData[0],
+    sampleCasesData[1]
+  ])
+  const inputRef = useRef(null)
+  const containerRef = useRef(null)
 
   // Filter matching cases based on CNR, Title, Court, or Category
   const filteredCases = sampleCasesData.filter(
@@ -71,6 +79,18 @@ export default function CaseSearchInspector({ searchQuery, setSearchQuery, selec
       c.court.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  // Ctrl+K / Cmd+K global shortcut listener
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   useEffect(() => {
     if (searchQuery.trim().length > 0) {
       setDropdownOpen(true)
@@ -79,19 +99,44 @@ export default function CaseSearchInspector({ searchQuery, setSearchQuery, selec
     }
   }, [searchQuery])
 
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setDropdownOpen(false)
+        setHistoryOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const handleSelect = (c) => {
+    setSelectedCase(c)
+    setDropdownOpen(false)
+    setHistoryOpen(false)
+    setHistoryStack((prev) => [c, ...prev.filter((item) => item.cnr !== c.cnr)])
+  }
+
+  const handleClearHistory = () => {
+    setHistoryStack([])
+    setHistoryOpen(false)
+  }
+
   return (
-    <div className="case-inspector-wrapper">
-      {/* Global Search Bar with Live Suggestions */}
-      <div className="dash-search-container">
+    <div className="case-inspector-wrapper" ref={containerRef}>
+      {/* Global Search Bar with Live Suggestions & History Stack Button */}
+      <div className="dash-search-container" style={{ display: 'flex', alignItems: 'center' }}>
         <Search size={16} className="search-icon-left" />
         <input
+          ref={inputRef}
           type="text"
           className="dash-search-input"
-          placeholder="Search CNR (e.g. TNCH010045212021), Case No., Party..."
+          placeholder="Search CNR (e.g. TNCH010045212021), Case No., Party... (Ctrl + K)"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => searchQuery.trim() && setDropdownOpen(true)}
         />
+
         {searchQuery ? (
           <button
             className="clear-search-btn"
@@ -103,7 +148,40 @@ export default function CaseSearchInspector({ searchQuery, setSearchQuery, selec
             <X size={14} />
           </button>
         ) : (
-          <span className="search-shortcut-kbd">Ctrl + K</span>
+          <button
+            type="button"
+            className="stack-action-btn"
+            onClick={() => setHistoryOpen(!historyOpen)}
+            title="Recent Search History Stack"
+            style={{ marginRight: '6px' }}
+          >
+            <History size={13} /> History ({historyStack.length})
+          </button>
+        )}
+
+        {/* Recent Search History Stack Dropdown */}
+        {historyOpen && !dropdownOpen && (
+          <div
+            className="search-results-dropdown"
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              marginTop: '6px',
+              background: '#ffffff',
+              borderRadius: '10px',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+              border: '1px solid #e2e8f0',
+              zIndex: 100,
+            }}
+          >
+            <Stack
+              items={historyStack}
+              onSelectItem={handleSelect}
+              onClearStack={handleClearHistory}
+            />
+          </div>
         )}
 
         {/* Live Search Suggestions Dropdown */}
@@ -118,10 +196,7 @@ export default function CaseSearchInspector({ searchQuery, setSearchQuery, selec
                 <div
                   key={c.cnr}
                   className={`search-result-item ${selectedCase?.cnr === c.cnr ? 'selected' : ''}`}
-                  onClick={() => {
-                    setSelectedCase(c)
-                    setDropdownOpen(false)
-                  }}
+                  onClick={() => handleSelect(c)}
                 >
                   <div className="result-item-top">
                     <span className="result-cnr">{c.cnr}</span>
