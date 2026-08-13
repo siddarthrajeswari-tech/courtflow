@@ -5,7 +5,6 @@ import AdminOverview from '../components/dashboard/AdminOverview.jsx'
 import JudgeDashboard from '../components/dashboard/JudgeDashboard.jsx'
 import ScrutinyDashboard from '../components/dashboard/ScrutinyDashboard.jsx'
 import AdvocateDashboard from '../components/dashboard/AdvocateDashboard.jsx'
-import { sampleCasesData } from '../components/dashboard/CaseSearchInspector.jsx'
 import '../components/dashboard/dashboard.css'
 import { ShieldCheck } from 'lucide-react'
 
@@ -13,7 +12,7 @@ export default function Dashboard({ user, onOpenLogin, onLogout }) {
   const [activeTab, setActiveTab] = useState('overview')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCase, setSelectedCase] = useState(sampleCasesData[0])
+  const [selectedCase, setSelectedCase] = useState(null)
 
   const isAdvocate = Boolean(
     (user && (

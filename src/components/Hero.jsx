@@ -42,17 +42,11 @@ export default function Hero() {
 
         <div className="hero-art" aria-hidden="true">
           <div className="hero-art-glow" />
-          <svg viewBox="0 0 200 160" className="courthouse-svg">
-            <rect x="0" y="140" width="200" height="20" fill="#0b3d91" opacity="0.15" />
-            <rect x="20" y="70" width="160" height="70" fill="#f5efe4" />
-            <rect x="30" y="40" width="140" height="35" fill="#f5efe4" />
-            <circle cx="100" cy="30" r="22" fill="#f5efe4" />
-            <rect x="90" y="8" width="20" height="20" fill="#f5efe4" />
-            {[0,1,2,3,4,5].map(i => (
-              <rect key={i} x={35 + i*24} y="75" width="10" height="60" fill="#d8cdb4" />
-            ))}
-            <rect x="95" y="118" width="10" height="15" fill="#0b3d91" />
-          </svg>
+          <img
+            src="/court_ai_building.png"
+            alt="AI Smart Court Architecture"
+            className="courthouse-ai-img"
+          />
         </div>
       </div>
     </section>
