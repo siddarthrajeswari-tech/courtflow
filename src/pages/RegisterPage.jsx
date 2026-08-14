@@ -1,38 +1,36 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Shield, Home } from 'lucide-react'
+import { Shield, Home, AlertCircle } from 'lucide-react'
 import { ROLE_PRESETS } from '../components/LoginModal.jsx'
 import '../components/LoginModal.css'
 
 export default function RegisterPage({ onLoginSuccess }) {
   const navigate = useNavigate()
   const [role, setRole] = useState('Judge')
-  const [fullName, setFullName] = useState('Hon. Justice Verma')
-  const [email, setEmail] = useState('verma.judge@court.gov.in')
-  const [idNumber, setIdNumber] = useState('JDG-1024')
-  const [password, setPassword] = useState('••••••••')
-  const [confirmPassword, setConfirmPassword] = useState('••••••••')
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [idNumber, setIdNumber] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [agreedTerms, setAgreedTerms] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleRoleChange = (selectedRole) => {
     setRole(selectedRole)
-    const preset = ROLE_PRESETS[selectedRole]
-    if (preset) {
-      setIdNumber(preset.id)
-      setFullName(preset.name)
-      setEmail(preset.email)
-    }
+    setErrorMessage('')
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    setErrorMessage('')
+
     if (!agreedTerms) {
-      alert('Please agree to the Terms of Service and Privacy Policy.')
+      setErrorMessage('Please agree to the Terms of Service and Privacy Policy.')
       return
     }
     if (password !== confirmPassword) {
-      alert('Passwords do not match!')
+      setErrorMessage('Passwords do not match!')
       return
     }
 
@@ -122,6 +120,14 @@ export default function RegisterPage({ onLoginSuccess }) {
           </div>
         </div>
 
+        {/* ERROR BANNER */}
+        {errorMessage && (
+          <div className="auth-error-banner">
+            <AlertCircle size={16} />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         {/* CREATE ACCOUNT FORM */}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="auth-field">
@@ -132,6 +138,7 @@ export default function RegisterPage({ onLoginSuccess }) {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Enter your full legal name"
+              autoComplete="off"
             />
           </div>
 
@@ -143,21 +150,20 @@ export default function RegisterPage({ onLoginSuccess }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@court.gov"
+              autoComplete="off"
             />
           </div>
 
           <div className="auth-field">
-            <label>Bar ID / Employee ID</label>
+            <label>{ROLE_PRESETS[role]?.idLabel || 'Bar ID / Employee ID'}</label>
             <input
               type="text"
               required
               value={idNumber}
               onChange={(e) => setIdNumber(e.target.value)}
               placeholder="Enter ID number"
+              autoComplete="off"
             />
-            <span className="field-hint">
-              Assigned ID: <strong>{ROLE_PRESETS[role]?.id}</strong>
-            </span>
           </div>
 
           <div className="auth-field">
@@ -168,6 +174,7 @@ export default function RegisterPage({ onLoginSuccess }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
+              autoComplete="off"
             />
           </div>
 
@@ -179,6 +186,7 @@ export default function RegisterPage({ onLoginSuccess }) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
+              autoComplete="off"
             />
           </div>
 

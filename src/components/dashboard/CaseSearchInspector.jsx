@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Search, AlertTriangle, Clock, Calendar, FileText, CheckCircle2, Sparkles, X, ChevronRight, History } from 'lucide-react'
+import { Search, AlertTriangle, Clock, Calendar, FileText, CheckCircle2, Sparkles, X, ChevronRight, History, ExternalLink } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { searchCases, findCaseByCNR } from '../../utils/caseSearch.js'
 import Stack from '../ui/Stack.jsx'
 
 export const sampleCasesData = [
@@ -62,6 +64,7 @@ export const sampleCasesData = [
 ]
 
 export default function CaseSearchInspector({ searchQuery, setSearchQuery, selectedCase, setSelectedCase }) {
+  const navigate = useNavigate()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
   const [historyStack, setHistoryStack] = useState(() => [
@@ -71,13 +74,8 @@ export default function CaseSearchInspector({ searchQuery, setSearchQuery, selec
   const inputRef = useRef(null)
   const containerRef = useRef(null)
 
-  // Filter matching cases based on CNR, Title, Court, or Category
-  const filteredCases = sampleCasesData.filter(
-    (c) =>
-      c.cnr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.court.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // Search live from 1,200 court cases dataset
+  const filteredCases = searchQuery.trim() ? searchCases(searchQuery, 10) : []
 
   // Ctrl+K / Cmd+K global shortcut listener
   useEffect(() => {
@@ -114,7 +112,8 @@ export default function CaseSearchInspector({ searchQuery, setSearchQuery, selec
     setSelectedCase(c)
     setDropdownOpen(false)
     setHistoryOpen(false)
-    setHistoryStack((prev) => [c, ...prev.filter((item) => item.cnr !== c.cnr)])
+    setHistoryStack((prev) => [c, ...prev.filter((item) => (item.cnr_number || item.cnr) !== (c.cnr_number || c.cnr))])
+    navigate(`/case-details/${encodeURIComponent(c.cnr_number || c.cnr)}`)
   }
 
   const handleClearHistory = () => {

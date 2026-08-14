@@ -5,6 +5,7 @@ import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
+import CaseDetailsPage from './pages/CaseDetailsPage.jsx'
 import LoginModal from './components/LoginModal.jsx'
 
 export default function App() {
@@ -54,6 +55,14 @@ export default function App() {
                 onLogout={handleLogout}
               />
             }
+          />
+          <Route
+            path="/case-details/:cnrNumber"
+            element={<CaseDetailsPage user={user} onOpenLogin={() => handleOpenLogin('signIn')} />}
+          />
+          <Route
+            path="/case/:cnrNumber"
+            element={<CaseDetailsPage user={user} onOpenLogin={() => handleOpenLogin('signIn')} />}
           />
           <Route
             path="/register"

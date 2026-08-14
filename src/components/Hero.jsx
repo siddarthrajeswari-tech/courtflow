@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Building2, Landmark, ListChecks, Layers, Globe2, ChevronRight, X, AlertTriangle, Clock, Sparkles, ExternalLink } from 'lucide-react'
+import { searchCases, findCaseByCNR } from '../utils/caseSearch.js'
 
 export const sampleSearchCases = [
   {
@@ -118,16 +119,7 @@ export default function Hero() {
   const navigate = useNavigate()
   const searchContainerRef = useRef(null)
 
-  const filteredCases = sampleSearchCases.filter((c) => {
-    const q = query.toLowerCase().trim()
-    if (!q) return false
-    return (
-      c.title.toLowerCase().includes(q) ||
-      c.cnr.toLowerCase().includes(q) ||
-      c.court.toLowerCase().includes(q) ||
-      c.category.toLowerCase().includes(q)
-    )
-  })
+  const filteredCases = query.trim() ? searchCases(query, 12) : []
 
   useEffect(() => {
     if (query.trim().length > 0) {
@@ -150,6 +142,7 @@ export default function Hero() {
   const handleSelectCase = (c) => {
     setSelectedCase(c)
     setIsOpen(false)
+    navigate(`/case-details/${encodeURIComponent(c.cnr_number || c.cnr)}`)
   }
 
   const handleOpenDashboard = (c) => {
@@ -165,13 +158,11 @@ export default function Hero() {
 
   const handleSubmitSearch = (e) => {
     e.preventDefault()
-    if (query.trim()) {
-      if (filteredCases.length > 0) {
-        setSelectedCase(filteredCases[0])
-        setIsOpen(false)
-      } else {
-        setIsOpen(true)
-      }
+    const q = query.trim()
+    if (q) {
+      const match = findCaseByCNR(q) || (searchCases(q, 1)[0])
+      const cnrToNavigate = match ? (match.cnr_number || match.cnr) : q
+      navigate(`/case-details/${encodeURIComponent(cnrToNavigate)}`)
     }
   }
 
@@ -193,10 +184,10 @@ export default function Hero() {
               <Search size={18} className="search-icon" />
               <input
                 type="text"
-                placeholder="Search by Case Number / Party Name / Court / State"
+                placeholder="Enter CNR Number"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                onFocus={() => query.trim() && setIsOpen(true)}
+                
               />
               {query && (
                 <button
@@ -215,49 +206,6 @@ export default function Hero() {
                 <Search size={16} /> Search
               </button>
             </form>
-
-            {/* Live Search Results Dropdown */}
-            {isOpen && (
-              <div className="hero-search-dropdown">
-                <div className="hero-dropdown-header">
-                  <span>Matching Cases ({filteredCases.length})</span>
-                  <span className="hero-dropdown-hint">Click a case to inspect analytics</span>
-                </div>
-
-                {filteredCases.length > 0 ? (
-                  <div className="hero-dropdown-list">
-                    {filteredCases.map((c) => (
-                      <div
-                        key={c.cnr}
-                        className="hero-search-result-item"
-                        onClick={() => handleSelectCase(c)}
-                      >
-                        <div className="hero-item-left">
-                          <div className="hero-item-top">
-                            <span className="hero-item-cnr">{c.cnr}</span>
-                            <span className="hero-item-category">{c.category}</span>
-                          </div>
-                          <div className="hero-item-title">{c.title}</div>
-                          <div className="hero-item-court">{c.court}</div>
-                        </div>
-
-                        <div className="hero-item-right">
-                          <span className={`hero-status-pill ${c.riskLevel.includes('Critical') ? 'critical' : 'high'}`}>
-                            {c.status}
-                          </span>
-                          <ChevronRight size={16} className="hero-item-arrow" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="no-hero-results">
-                    No matching cases found for "<strong>{query}</strong>".<br />
-                    <span>Try searching <strong>State</strong>, <strong>Kumar</strong>, <strong>Apex</strong>, <strong>TNCH010045212021</strong>, or <strong>Patel</strong>.</span>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {/* In-place Case Inspector Modal for Home Page */}
